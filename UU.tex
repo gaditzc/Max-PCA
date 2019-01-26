@@ -1,0 +1,120 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{Max PCA}
+\date{January 2019}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+
+\begin{document}
+
+\maketitle
+
+Consider the minimization of a general objective function
+$f(X)$ over all low-rank $n\times m$ matrices:
+
+\begin{equation}
+\begin{split}
+\min_{X\in \mathbb{R}^{n\times n}} & f\left(X\right)\\
+s.t.\quad X & \preceq I\\
+rank\left(X\right) &\le r
+\end{split}
+\end{equation}
+
+where the objective function $f:\mathbb{R}^{n\times n} \rightarrow \mathbb{R}$ is smooth and S is convex set.
+To cope the none convex constaraint, we factorize the variable into:
+\begin{align*}
+    X = UU^T=\phi\left(U\right)
+\end{align*}, and optimize: over the $n \times r$ matrices $U$. With this parameterization of X, we can recast (1) into the following program:
+
+\begin{equation}
+    \min_{U\in \mathbb{R}^{n\times r}, UU^T\in S} h\left(U\right):=f\left(UU^T\right)
+\end{equation}
+
+We provide a geometric analysis for the factored program (2) and show that, under certain conditions on $f(X)$, all critical points of the objective function $h\left(U,V\right)$ are well-behaved.
+
+\begin{definition}['$(2r, 4r)-restricted\; strongly\; convex\; and\; smooth$']
+As is known, without any assumptions on the problem, even minimizing traditional quadratic objective functions is challenging. For this purpose, we focus on the model where $f(X)$ is '$(2r, 4r)-restricted\; strongly\; convex\; and\; smooth$', i.e., for any $n\times n$ matrices $X, G\preceq I$ with $rank(X) \le 2r$ and $rank(G) \le 4r$, the Hessian of $f(X)$ satisfies:
+
+\begin{align}
+\alpha\left\Vert G\right\Vert^2_F\le \left[\nabla^2f\left(X\right)\right]\left(G,G\right)\le \beta\left\Vert G\right\Vert^2_F
+\end{align}
+
+With $\beta / \alpha \le 1.5$.
+\end{definition}
+
+\begin{theorem}
+(Transforming the Landscape for PSD matrices). Suppose the function $f(X)$ in (1) is '$(2r, 4r)$-restricted strong convexity and smoothness'. Assume $X^*$ is an optimal solution of (1) with
+$rank(X^*) = r^*$. Set $r\ge r^*$ in (2). Let $U$ be any critical point of $h\left(U\right)$ satisfying $\nabla h(U) = 0$. Then $U$ either
+corresponds to a square-root factor of $X^*$, i.e., $X^* = UU^T$ or is a strict saddle of the (1).
+
+More precisely, let $U^*\in \mathbb{R}^n\times r$ such that $X^*=U^*{U^*}^T$ and set $D=U-U^*R$ with $R=\arg\min_{R:R\in \mathbb{O}_r}\left\Vert U- U^* R \right\Vert^2_F$, then the curvature of $\nabla^2h\left(U\right)$ along D is strictly negative:
+\begin{align*}
+    \left[\nabla^{2}h\left(U\right)\right]\left(G,G\right)\le\begin{cases}
+-0.24\alpha\min\left\{ \rho\left(U\right)^{2},\rho\left(X^{*}\right)\right\} \left\Vert X^{*}\right\Vert _{F}^{2} & when\;r\ge r^{*}\\
+-0.19\alpha\rho\left(X^{*}\right)\left\Vert D\right\Vert _{F}^{2} & when\;r=r^{*}\\
+-0.24\alpha\rho\left(X^{*}\right)\left\Vert D\right\Vert _{F}^{2} & when\;U=\boldsymbol{0}
+\end{cases}
+\end{align*}
+
+with $\rho\left(\cdot\right)$ denoting the smallest nonzero singular value of its argument. This further implies:
+\begin{align*}
+    \lambda_{min} \left(\nabla^{2}h\left(U\right)\right)\le\begin{cases}
+-0.24\alpha\min\left\{ \rho\left(U\right)^{2},\rho\left(X^{*}\right)\right\}  & when\;r\ge r^{*}\\
+-0.19\alpha\rho\left(X^{*}\right) & when\;r=r^{*}\\
+-0.24\alpha\rho\left(X^{*}\right) & when\;U=\boldsymbol{0}
+\end{cases}
+\end{align*}
+\end{theorem}
+
+Before continuing this geometry-based argument, it is essential to have a good understanding of the domain of the
+factored problem and establish a metric for this domain. Since for any $U$, $\phi\left(U\right)=\phi\left(UR\right)$ where $R\in \mathbb{O}_r$, the domain of the factored objective function $h\left(U\right)$ is stratified into equivalence classes. The matrices in each of these equivalence classes differ by an orthogonal transformation. One implication is that, when working in the factored space, we should
+consider all factorizations of $X^*$: 
+\begin{align*}
+    \mathcal{A}^*=\left\{ U^*\in \mathbb{R}^{n\times R}:\phi\left(U\right)=X^*\right\} 
+\end{align*}
+
+A second implication is that when considering the distance between two points $U_1$ and $U_2$ , one should use the distance between their corresponding equivalence classes:
+
+\begin{align*}
+    d\left(U_1,U_2\right)=\min_{R_1,R_2\in \mathbb{O}_r}\left\Vert U_1R_1 - U_2R_2\right\Vert_F = \min_{R\in \mathbb{O}_r}\left\Vert U_1 - U_2R\right\Vert _F
+\end{align*}
+
+The second minimization problem is known as the orthogonal Procrustes problem, where the global optimum $R$ is characterized by the following lemma:
+
+\begin{lemma}[An optimal solution for the orthogonal Procrustes problem]
+    \begin{align*}
+        R=\arg\min_{R\in \mathbb{O}_r}\left\Vert U_1 - U_2R\right\Vert _F^2=\arg\max_{R\in \mathbb{O}_r}\left<U_1,U_2R\right>
+    \end{align*}
+    is given by $R=LP^T$ , where the orthogonal matrices $L,P \in \mathbb{R}^{r\times r}$ are defined via the singular value decomposition of $U_2^T U_1=L\Sigma P^T$. Moreover, we have $U_1^T U_2R = {(U_2 R)}^T U_1\succeq 0$ and $\left< U_1, U_2R \right> = {\left\Vert U_1^T U_2 \right\Vert}_*$.
+\end{lemma}
+
+For any two matrices $U_1, U_2 \in \mathbb{R}^{n\times r}$ , the following lemma relates the distance $\left\Vert U_1U_1^T - U_2U_2^T \right\Vert_F$ in the lifted space to the distance $d(U_1, U_2)$ in the factored space:
+
+
+\begin{lemma}
+Assume that $U_1, U_2 \in \mathbb{R}^{n\times r}$. Then:
+    \begin{align*}
+        \left\Vert U_1U_1^T - U_2U_2^T \right\Vert_F \ge \min\left\{\rho\left(U_1\right), \rho\left(U_2\right)\right\}d\left(U_1, U_2\right)
+    \end{align*}
+\end{lemma}
+
+In particular, when one matrix is of full rank, we have a similar but tighter result to relate these two distances:
+
+\begin{lemma}
+Assume that $U_1, U_2 \in \mathbb{R}^{n\times r}$ and $rank\left(U_1\right)=r$. Then:
+    \begin{align*}
+        \left\Vert U_1U_1^T - U_2U_2^T \right\Vert_F \ge 2\left(\sqrt{2}-1\right)\rho\left(U_1\right)d\left(U_1, U_2\right)
+    \end{align*}
+\end{lemma}
+
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

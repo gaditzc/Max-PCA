@@ -1,0 +1,167 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}
+
+\title{Max PCA}
+\author{Gad Zalcberg }
+\date{January 2019}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+
+\begin{document}
+
+\maketitle
+
+\section{Problem Introduction}
+Consider the minimization of a general objective function
+$f(X)$ over all low-rank $n\times m$ matrices:
+
+\begin{equation}
+\begin{split}
+\min_{X\in \mathbb{R}^{n\times m}} & f\left(X\right)\\
+s.t.\quad X & \in S\\
+rank\left(X\right) &\le r
+\end{split}
+\end{equation}
+
+where the objective function $f:\mathbb{R}^{n\times m} \rightarrow \mathbb{R}$ is smooth and S is convex set.
+To cope the none convex constaraint, we factorize the variable into $X = U V^T$, and optimize: over the $n \times t$ and $m \times r$ matrices $U$ and $V$ . With this parameterization of X, we can recast (1) into the following program:
+
+\begin{equation}
+    \min_{U\in \mathbb{R}^{n\times r}, V\in \mathbb{R}^{m\times r},UV^T\in S} h\left(U,V\right):=f\left(UV^T\right)
+\end{equation}
+
+By focusing on a general objective function, we attempt to provide a unifying framework for low-rank matrix optimizations with the factorization approach. We provide a geometric analysis for the factored program (2) and show that, under certain conditions on $f(X)$, all critical points of the objective function $h\left(U,V\right)$ are well-behaved.
+
+
+\section{Condition to global minimum of $f$ under rank and convex constraint:}
+
+Before presenting the main results, we lay out the necessary assumptions on the objective function $f(X)$. As is known, without any assumptions on the problem, even minimizing traditional quadratic objective functions is challenging. For this purpose, we focus on the model where $f(X)$ is:
+
+'$(2r, 4r)-restricted\; strongly\; convex\; and\; smooth$', i.e., for any $n\times m$ matrices $X, G\in S$ with $rank(X) \le 2r$ and $rank(G) \le 4r$, the Hessian of $f(X)$ satisfies:
+
+\begin{align}
+\alpha\left\Vert G\right\Vert^2_F\le \left[\nabla^2f\left(X\right)\right]\left(G,G\right)\le \beta\left\Vert G\right\Vert^2_F
+\end{align}
+
+for some positive $\alpha$ and $\beta$.
+
+\begin{proposition}[Condition to global minimum of $f$]
+Consider the minimization of a general objective function $f\left(x\right)$ over low-rank $n\times m$ matrices in the convex set $S$:
+
+\begin{align*}
+    \min_{x} & f\left(x\right)\\
+    rank\left(x\right) & \le r\\
+    x & \in S
+\end{align*}
+
+Suppose $f\left(x\right)$ satisfies the $\left(2r,4r\right)$-restricted strong convexity and smoothness condition with positive $\alpha$ and $\beta$, and assume for any $G\in S,rank\left(G\right)\le2r$ we have: $\nabla f^{T}\left(X^{*}\right)G\ge0$ , than $X^{*}$ is the optimal solution of the problem.
+
+\end{proposition}
+
+Proof of proposition 1: For any $X\in\mathbb{R}^{n\times m}$ with $rank\left(X\right)\le r$, the second order Taylor expansion gives:
+\begin{align*}
+    f\left(X\right)=f\left(X^{*}\right)+\left\langle \nabla f\left(X^{*}\right),\left(X-X^{*}\right)\right\rangle +\frac{1}{2}\left[\nabla^{2}f\left(\widetilde{X}\right)\right]\left(X-X^{*},X-X^{*}\right)
+\end{align*}
+
+where $\widetilde{X}=tX+\left(1-t\right)X^{*}$ for some $t\in\left[0,1\right]$. Since $rank\left(X\right)\le r$ and $rank\left(X^{*}\right)\le r$ we get $rank\left(X-X^{*}\right)\le2r$, so by condition, we get: $\left[\nabla^{2}f\left(\widetilde{X}\right)\right]\left(X-X^{*},X-X^{*}\right)\ge\alpha\left\Vert X-X^{*}\right\Vert _{F}^{2}$ and $\left\langle \nabla f\left(X^{*}\right),\left(X-X^{*}\right)\right\rangle \ge0$ and:
+
+\begin{align*}
+    f\left(X\right)\ge f\left(X^{*}\right)+0+\frac{\alpha}{2}\left\Vert X-X^{*}\right\Vert _{F}^{2}
+\end{align*}
+
+
+\section{Regularization of the factorized problem:}
+
+Throughout the proof of the main theorem, we use $X^*$ to denote the global minimum of (1) (i.e., the low-rank critical point of $f(X)$), unless stated otherwise. We factorize the variable $X =UV^T$ with $U\in \mathbb{R}^{n\times r} , V\in \mathbb{R}^{m\times r}$ and transform (1) into its factored counterpart (2). So $X,W$ are matrices depending on U and V:
+\begin{align*}
+        W=\left[\begin{array}{c}
+U\\
+V
+\end{array}\right],\hat{W}=\left[\begin{array}{c}
+U\\
+-V
+\end{array}\right],X=UV^{T}
+\end{align*}
+
+Let $X^* = Q_{U^*}\Sigma^*Q_{V^*}^T$ denote an SVD of $X$, where $Q_{U^*}\in \mathbb{R}^{n\times r}, Q_{V^*}\in \mathbb{R}^{m\times r}$ are orthonormal matrices of appropriate sizes, and $\Sigma\in\mathbb{R}^{r\times r}$ is a diagonal matrix with non-negative diagonal (but with some zeros on the diagonal if $r > r^*= rank(X^*)$). We denote:
+
+\begin{align*}
+    U^* = Q_{U^*}{\Sigma^*}^{\frac{1}{2}}, \; V^* = Q_{V^*}{\Sigma^*}^{\frac{1}{2}}
+\end{align*}
+
+where $X^* = U^* {V^*}^T$ forms a balanced factorization of $X^*$ since $U^*$ and $V^*$ have the same singular values. Throughout the proof, we utilize the following two ways to stack $U^*$ and $V^*$ together:
+\begin{align*}
+        W^*=\left[\begin{array}{c}
+U^*\\
+V^*
+\end{array}\right],\hat{W^*}=\left[\begin{array}{c}
+U^*\\
+-V^*
+\end{array}\right]
+\end{align*}
+
+Before moving on, we note that for any solution $(U , V )$ to (2), $(U\Psi, V\Phi)$ is also a solution to (2) for any $\Psi,\Phi\in\mathbb{R}^{r\times r}$, such that $U\Psi\Phi^T V^T = UV^T$. In order to address this ambiguity (i.e., to reduce the search space of W for (2)), we introducing a regularizer:
+\begin{align}
+    g\left(U,V\right)=\frac{\mu}{4}\left\Vert U^TU-V^TV\right\Vert^2_F
+\end{align}
+and solving the following problem:
+\begin{align}
+    {\min}_{U,V}\rho\left(U,V\right):=f\left(UV^T\right) + g\left(U,V\right)
+\end{align}
+
+where $\mu$ controls the weight for the term $\left\Vert U^TU-V^TV\right\Vert^2_F$ which will be discussed soon.
+
+\section{Main Theorem:}
+
+Suppose $h:\mathbb{R}^n\rightarrow R$ is a twice continuously differentiable objective function. We begin with the notion of strict saddles and the strict saddle property.
+
+\begin{definition}[Critical points]
+We say $X^*$ a critical point if for any $G\in S$ we have: $\nabla f^{T}\left(X^{*}\right)G\ge0$.
+\end{definition}
+
+\begin{definition}[Strict saddles]
+A critical point $X^*$ is a strict saddle if there exist $G\in S$ s.t. $\left[\nabla^2 h\left(x\right)\right]\left(G,G\right) < 0$.
+\end{definition}
+
+\begin{definition}[Strict saddle property]
+A twice differentiable function satisfies the strict saddle property if each critical point either corresponds to a local minimum or is a strict saddle.
+\end{definition}
+
+Our main argument is that, under certain conditions on $f(X)$, the objective function $\rho(W)$ has no spurious local minima and satisfies the strict saddle property. This is equivalent to categorizing all the critical points into two types: 1) the global minima which correspond to the global solution of the original convex problem (1) and 2) strict saddles such that the Hessian matrix $\nabla^2\rho\left(W\right)$ evaluated at these points has a strictly negative eigenvalue. We formally establish this in the following theorem:
+
+\begin{theorem}
+For any $\mu > 0$, each critical point $W=\left[\begin{array}{c}
+U\\
+V
+\end{array}\right]$ of $\rho(W)$ defined in (5) satisfies 
+\begin{align}
+    \left\Vert U^TU-V^TV\right\Vert^2_F
+\end{align}
+Furthermore, suppose that the function $f(X)$ satisfies the '$(2r, 4r)-$restricted strong convexity and smoothness' condition (3) with positive constants $\alpha$ and $\beta$ satisfying $\frac{\beta}{\alpha} \le 1.5$ and that the function $f(X)$ has a critical point $x\in \mathbb{R}^{n\times m}$ with $rank(X^*) = r^* \le r$. Set $\mu \le 16$ for the factored problem (5). Then $\rho(W)$ has no spurious local minima, i.e., any local
+minimum of $\rho(W)$ is a global minimum corresponding to the global solution of the original problem (1): $UV^T = X^*$. In addition, $\rho(W)$ obeys the strict saddle property that any critical point not being a local minimum is a strict saddle with:
+\begin{align}
+        \lambda_{\min}\left(\nabla^{2}\rho\left(W\right)\right)\le\begin{cases}
+-0.08\alpha\sigma_r\left(X^{*}\right) & when\;r=r^{*}\\
+-0.05\alpha\min\left\{ \sigma^2_{r^c}\left(W\right),2\sigma_{r^*}\left(X^{*}\right)\right\}  & when\;r> r^{*}\\
+-0.1\alpha\sigma_{r^*}\left(X^{*}\right) & when\;r_c=0
+\end{cases}
+\end{align}
+where $r_c \le r$ is the rank of $W$, $\lambda_{\min}\left(\cdot\right)$ represents the smallest eigenvalue, and $\sigma_{\ell}\left(\cdot\right)$ denotes the $\ell$-th largest singular value.
+
+\end{theorem}
+
+
+\section{Proof Of Main Theorem:}
+The  main  argument  involves  showing  that  each  critical  point
+of $\rho\left(W\right)$ either corresponds to the global solution of (1) or is a strict saddle whose Hessian has a strictly negative eigenvalue
+\bibliographystyle{plain}
+\bibliography{references}
+\end{document}

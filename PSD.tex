@@ -1,0 +1,322 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}{Proposition}
+
+\title{Max PCA}
+\author{Gad Zalcberg }
+\date{January 2019}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+
+\begin{document}
+
+\maketitle
+
+\section{Problem Introduction}
+Consider the minimization of a general objective function
+$f(X)$ over all low-rank $n\times n$ matrices:
+
+\begin{equation}
+\begin{split}
+\min_{X\in \mathbb{R}^{n\times n}} & f\left(X\right)\\
+s.t.\quad X & \preceq A\\
+rank\left(X\right) &\le r
+\end{split}
+\end{equation}
+
+where the objective function $f:\mathbb{R}^{n\times n} \rightarrow \mathbb{R}$ is smooth and $A$ is PSD matrix.
+To cope the none convex constaraint, we factorize the variable into $X = U V^T$, and optimize over the $n \times r$ matrices $U$ and $V$ . With this parameterization of X, we can recast (1) into the following program:
+
+\begin{equation}
+    \min_{U,V\in \mathbb{R}^{n\times r} ,UV^T\preceq S} h\left(U,V\right):=f\left(UV^T\right)
+\end{equation}
+
+We provide a geometric analysis for the factored program (2) and show that, under certain conditions on $f(X)$, all critical points of the objective function $h\left(U,V\right)$ are well-behaved.
+
+
+\section{Condition to global minimum of $f$ under rank and convex constraint:}
+
+Before presenting the main results, we lay out the necessary assumptions on the objective function $f(X)$. As is known, without any assumptions on the problem, even minimizing traditional quadratic objective functions is challenging. For this purpose, we focus on the model where $f(X)$ is:
+
+'$(2r, 4r)-restricted\; strongly\; convex\; and\; smooth$', i.e., for any $n\times m$ matrices $X, G\in S$ with $rank(X) \le 2r$ and $rank(G) \le 4r$, the Hessian of $f(X)$ satisfies:
+
+\begin{align}
+\alpha\left\Vert G\right\Vert^2_F\le \left[\nabla^2f\left(X\right)\right]\left(G,G\right)\le \beta\left\Vert G\right\Vert^2_F
+\end{align}
+
+for some positive $\alpha$ and $\beta$.
+
+\begin{proposition}[Condition to global minimum of $f$]
+Consider the minimization of a general objective function $f\left(x\right)$ over low-rank $n\times m$ matrices in the convex set $S$:
+
+\begin{align*}
+    \min_{x} & f\left(x\right)\\
+    rank\left(x\right) & \le r\\
+    x & \in S
+\end{align*}
+
+Suppose $f\left(x\right)$ satisfies the $\left(2r,4r\right)$-restricted strong convexity and smoothness condition with positive $\alpha$ and $\beta$, and assume for any $G\in S,rank\left(G\right)\le2r$ we have: $\nabla f^{T}\left(X^{*}\right)G\ge0$ , than $X^{*}$ is the optimal solution of the problem.
+
+\end{proposition}
+
+Proof of proposition 1: For any $X\in\mathbb{R}^{n\times n}$ with $rank\left(X\right)\le r$, the second order Taylor expansion gives:
+\begin{align*}
+    f\left(X\right)=f\left(X^{*}\right)+\left\langle \nabla f\left(X^{*}\right),\left(X-X^{*}\right)\right\rangle +\frac{1}{2}\left[\nabla^{2}f\left(\widetilde{X}\right)\right]\left(X-X^{*},X-X^{*}\right)
+\end{align*}
+
+where $\widetilde{X}=tX+\left(1-t\right)X^{*}$ for some $t\in\left[0,1\right]$. Since $rank\left(X\right)\le r$ and $rank\left(X^{*}\right)\le r$ we get $rank\left(X-X^{*}\right)\le2r$, so by condition, we get: $\left[\nabla^{2}f\left(\widetilde{X}\right)\right]\left(X-X^{*},X-X^{*}\right)\ge\alpha\left\Vert X-X^{*}\right\Vert _{F}^{2}$ and $\left\langle \nabla f\left(X^{*}\right),\left(X-X^{*}\right)\right\rangle \ge0$ and:
+
+\begin{align*}
+    f\left(X\right)\ge f\left(X^{*}\right)+0+\frac{\alpha}{2}\left\Vert X-X^{*}\right\Vert _{F}^{2}
+\end{align*}
+
+
+\section{Regularization of the factorized problem:}
+
+Throughout the proof of the main theorem, we use $X^*$ to denote the global minimum of (1) (i.e., the low-rank critical point of $f(X)$), unless stated otherwise. We factorize the variable $X =UV^T$ with $U, V\in \mathbb{R}^{n\times r}$ and transform (1) into its factored counterpart (2). So $X,W$ are matrices depending on U and V:
+\begin{align*}
+        W=\left[\begin{array}{c}
+U\\
+V
+\end{array}\right],\hat{W}=\left[\begin{array}{c}
+U\\
+-V
+\end{array}\right],X=UV^{T}
+\end{align*}
+
+Let $X^* = Q_{U^*}\Sigma^*Q_{V^*}^T$ denote an SVD of $X$, where $Q_{U^*}, Q_{V^*}\in \mathbb{R}^{n\times r}$ are orthonormal matrices of appropriate sizes, and $\Sigma\in\mathbb{R}^{r\times r}$ is a diagonal matrix with non-negative diagonal (but with some zeros on the diagonal if $r > r^*= rank(X^*)$). We denote:
+
+\begin{align*}
+    U^* = Q_{U^*}{\Sigma^*}^{\frac{1}{2}}, \; V^* = Q_{V^*}{\Sigma^*}^{\frac{1}{2}}
+\end{align*}
+
+where $X^* = U^* {V^*}^T$ forms a balanced factorization of $X^*$ since $U^*$ and $V^*$ have the same singular values. Throughout the proof, we utilize the following two ways to stack $U^*$ and $V^*$ together:
+\begin{align*}
+        W^*=\left[\begin{array}{c}
+U^*\\
+V^*
+\end{array}\right],\hat{W^*}=\left[\begin{array}{c}
+U^*\\
+-V^*
+\end{array}\right]
+\end{align*}
+
+Before moving on, we note that for any solution $(U , V )$ to (2), $(U\Psi, V\Phi)$ is also a solution to (2) for any $\Psi,\Phi\in\mathbb{R}^{r\times r}$, such that $U\Psi\Phi^T V^T = UV^T$. In order to address this ambiguity (i.e., to reduce the search space of W for (2)), we introducing a regularizer:
+\begin{align}
+    g\left(U,V\right)=\frac{\mu}{4}\left\Vert U^TU-V^TV\right\Vert^2_F
+\end{align}
+
+
+where $\mu$ controls the weight for the term $\left\Vert U^TU-V^TV\right\Vert^2_F$, and solving the following problem:
+\begin{align}
+    {\min}_{U,V}\rho\left(U,V\right):=f\left(UV^T\right) + g\left(U,V\right)
+\end{align}
+
+\section{Main Theorem:}
+
+Suppose $h:\left\{T: T\preceq A\right\}\rightarrow R$ is a twice continuously differentiable objective function. We begin with the notion of strict saddles and the strict saddle property.
+
+\begin{definition}[Critical points]
+We say $X^*$ a critical point if for any $G\preceq A$ we have: $\left<\nabla h\left(X^{*}\right),G\right>\ge0$.
+\end{definition}
+
+\begin{definition}[Strict saddles]
+A critical point $X^*$ is a strict saddle if there exist $G\preceq A$ s.t. $\left[\nabla^2 h\left(X^*\right)\right]\left(G-X^*,G-X^*\right) < 0$.
+\end{definition}
+
+\begin{definition}[Strict saddle property]
+A twice differentiable function satisfies the strict saddle property if each critical point either corresponds to a local minimum or is a strict saddle.
+\end{definition}
+
+Our main argument is that, under certain conditions on $f(X)$, the objective function $\rho(W)$ has no spurious local minima and satisfies the strict saddle property. This is equivalent to categorizing all the critical points into two types: 1) the global minima which correspond to the global solution of the original convex problem (1) and 2) strict saddles such that the Hessian matrix $\nabla^2\rho\left(W\right)$ evaluated at these points has a strictly negative eigenvalue. We formally establish this in the following theorem:
+
+\begin{theorem}
+For any $\mu > 0$, each critical point $W=\left[\begin{array}{c}
+U\\
+V
+\end{array}\right]$ of $\rho(W)$ defined in (5) satisfies 
+\begin{align}
+    U^TU-V^TV=0
+\end{align}
+Furthermore, suppose that the function $f(X)$ satisfies the '$(2r, 4r)-$restricted strong convexity and smoothness' condition (3) with positive constants $\alpha$ and $\beta$ satisfying $\frac{\beta}{\alpha} \le 1.5$ and that the function $f(X)$ has a critical point $x\in \mathbb{R}^{n\times m}$ with $rank(X^*) = r^* \le r$. Set $\mu \le 16$ for the factored problem (5). Then $\rho(W)$ has no spurious local minima, i.e., any local
+minimum of $\rho(W)$ is a global minimum corresponding to the global solution of the original problem (1): $UV^T = X^*$. In addition, $\rho(W)$ obeys the strict saddle property that any critical point not being a local minimum is a strict saddle with:
+\begin{align}
+        \left[\nabla^{2}\rho\left(W\right)\right]\left(\Delta,\Delta\right)\le\left\Vert\Delta\right\Vert\begin{cases}
+-0.08\alpha\sigma_r\left(X^{*}\right) & when\;r=r^{*}\\
+-0.05\alpha\min\left\{ \sigma^2_{r^c}\left(W\right),2\sigma_{r^*}\left(X^{*}\right)\right\}  & when\;r> r^{*}\\
+-0.1\alpha\sigma_{r^*}\left(X^{*}\right) & when\;r_c=0
+\end{cases}
+\end{align}
+for some $\Delta\preceq A$ where $r_c \le r$ is the rank of $W$, $\lambda_{\min}\left(\cdot\right)$ represents the smallest eigenvalue, and $\sigma_{\ell}\left(\cdot\right)$ denotes the $\ell$-th largest singular value.
+
+\end{theorem}
+
+
+\section{Useful Results:}
+
+\subsection{Gradient and Hessian expressions for $\rho\left(W\right)$:}
+
+\subsubsection{Gradient:}
+\begin{align*}
+    \nabla_U\rho\left(U,V\right)=\nabla f\left(x\right)V+\mu U\left(VV^T-UU^T\right)\\
+    \nabla_V\rho\left(U,V\right)=\nabla f\left(x\right)^TU-\mu V\left(VV^T-UU^T\right)
+\end{align*}
+
+\subsubsection{Hessian quadrature form:}
+For any $\Delta=\left[\begin{array}{c}
+\Delta_{U}\\
+\Delta_{V}
+\end{array}\right]$, where $\Delta_{V},\Delta_{U}\in \mathbb{R}^{n\times r}$:
+\begin{align*}
+    \left[\nabla^2\rho\left(W\right)\right]\left(\Delta,\Delta\right)=\left[\nabla^2 f\left(W\right)\right]\left(\Delta_UV^T+U\Delta_V^T,\Delta_UV^T+U\Delta_V^T\right) + 2\left<\nabla f\left(x\right),\Delta_U\Delta_V^T\right> + \left[\nabla^2g\left(W\right)\right]\left(\Delta,\Delta\right)
+\end{align*}
+where:
+\begin{align*}
+    \left[\nabla^2g\left(W\right)\right]\left(\Delta,\Delta\right)=\mu\left<\hat{W}^TW,\hat{\Delta}^T\Delta\right>+\mu\left<\hat{W}\hat{\Delta}^T,\Delta W^T\right> + \mu\left<\hat{W}\hat{W}^T,\Delta \Delta^T\right>
+\end{align*}
+
+\begin{proposition} \label{proposition_2}
+Suppose a function $f\left(X\right)$ satisfies the '(2r,4r)-restricted strong convexity and smoothness' condition (3) with positive $\alpha$ and $\beta$. Than for any $n\times n$ matrices Z,G,H of rank at most 2r we have:
+\begin{align*}
+    \left\vert\frac{2}{\alpha + \beta}\left[\nabla^2 f\left(Z\right)\right]\left(G,H\right)-\left<G,H\right>\right\vert\le \frac{\alpha - \beta}{\alpha + \beta}\left\Vert G\right\Vert_F\left\Vert H\right\Vert_F
+\end{align*}
+\end{proposition}
+
+\begin{lemma} \label{lemma_2}
+Suppose $f\left(X\right)$ satisfies the '(2r,4r)-restricted strong convexity and smoothness' condition (3). For any critical point $W$ of (5) let $P_W\in\mathbb{R}^{2n\times2n}$ be the orthogonal projector onto the column space of $W$. Then:
+\begin{align*}
+    \left\Vert \left(WW^T-W^*{W^*}^T\right)P_W\right\Vert_F\le2\frac{\alpha - \beta}{\alpha + \beta}\left\Vert X-X^*\right\Vert_F
+\end{align*}
+\end{lemma}
+
+\begin{lemma} \label{lemma_3}
+ For any matrices $C,D\in\mathbb{R}^{n\times r}$ with rank $r_1$ and $r_2$ respectively, let $R =\arg \min_{R^{'} \in\mathcal{O}_r}\left\Vert C-DR^{'}\right\Vert_F$. Then
+ \begin{align*}
+     \frac{\left\Vert CC^T-DD^T\right\Vert_F^2}{\left\Vert C-DR\right\Vert_F^2}\ge \max\left\{2\left(\sqrt{2}-1\right)\sigma_r^2\left(D\right),\min\left\{\sigma_{r_2}^2\left(D\right),\sigma_{r_1}^2\left(C\right)\right\}\right\}
+ \end{align*}
+If $C=0$ than we have:
+\begin{align*}
+    \left\Vert CC^T-DD^T\right\Vert_F^2\ge\sigma_{r_2}^2\left(D\right)\left\Vert C-DR\right\Vert_F^2
+\end{align*}
+\end{lemma}
+
+\begin{lemma} \label{lemma_4}
+ For any matrices $C,D\in\mathbb{R}^{n\times r}$, let $P_c$ be the orthogonal projector onto the range of $C$. let $R =\arg \min_{R^{'} \in\mathcal{O}_r}\left\Vert C-DR^{'}\right\Vert_F$. Than 
+ \begin{align*}
+     \left\Vert C\left(C-DR\right)^T\right\Vert^2_F\le\frac{1}{8}\left\Vert CC^T-DD^T\right\Vert^2_F + \left(3 + \frac{1}{2\left(\sqrt{2}- 1\right)}\right)\left\Vert \left(CC^T-DD^T\right)P_C\right\Vert^2_F
+ \end{align*}
+\end{lemma}
+
+\begin{lemma} \label{lemma_5}
+ Suppose $f\left(X\right)$ satisfies the '(2r,4r)-restricted strong convexity and smoothness' condition (3). For any critical point $W$ of (5) we have:
+\begin{align*}
+    \left\Vert WW^T-W^*{W^*}^T\right\Vert_F^2\le4\left\Vert X-X^*\right\Vert_F^2
+\end{align*}
+\end{lemma}
+
+\begin{lemma}[Bounds over the Hessian expression:] \label{lemma_6}
+\begin{align*}
+    \left\langle \nabla f\left(X\right),\Delta_{U}\Delta_{V}^{T}\right\rangle \le & -\alpha\left\Vert X-X^*\right\Vert^2_F\\
+    \left[\nabla f\left(X\right)\right]\left(\Delta_{U}V^{T}+U\Delta_{V}^{T},\Delta_{U}V^{T}+U\Delta_{V}^{T}\right) \le &\beta\left\Vert W\Delta^T\right\Vert^2_F\\
+    \left\langle \hat{W}\hat{\Delta}^{T},\Delta W^{T}\right\rangle \le & \left\Vert W\Delta^T\right\Vert^2_F\\
+    \left\langle \hat{W}\hat{W}^{T},\Delta\Delta^{T}\right\rangle \le & 2\left\Vert X-X^*\right\Vert^2_F
+\end{align*}
+\end{lemma}
+
+\begin{lemma} \label{lemma_7}
+ for any critical point w we have $g\left(w\right) = 0$
+\end{lemma}
+
+\section{Proof Of The Main Theorem:}
+
+Our main argument involves showing that each critical point $W$ of $\rho$ either corresponds to the global solution of (1) or is a strict saddle whose Hessian has $\left[\nabla^2 h\left(x\right)\right]\left(W-W^*R,W-W^*R\right) < 0$ where $R=\arg\min_{R^{'}\in\mathcal{O}_r}\left\Vert W-W^*R^{'}\right\Vert_F$. Concretely, denote the set of critical points of $\rho\left(W\right)$ by:
+
+\begin{align*}
+    \mathcal{C}:=\left\{W\in\mathbb{R}^{2n\times r}:UV^T\preceq A\Rightarrow \left<\nabla \rho\left(X^{*}\right),UV^T\right>\ge0\right\}
+\end{align*}
+
+We separate $\mathcal{C}$ into two subsets:
+
+\begin{align*}
+    \mathcal{C}_1:=\mathcal{C} \cap \left\{W\in\mathbb{R}^{2n\times r}:UV^T=X^*\right\}\\
+    \mathcal{C}_2:=\mathcal{C} \cap \left\{W\in\mathbb{R}^{2n\times r}:UV^T\ne X^*\right\}
+\end{align*}
+
+satisfying $\mathcal{C}_1\cup \mathcal{C}_2 = \mathcal{C}$. We will show that $\mathcal{C}_1$ is the set of global minima and $\mathcal{C}_2$ is set of saddle points.
+
+\subsection{The Formal Proof:}
+\subsubsection{Proof that $w \in \mathcal{C}_1\Rightarrow \rho\left(w\right)$ is global minima:}
+
+Firstly, by lemma \ref{lemma_7} for any $W\in\mathcal{C}_1$ we have: $g\left(W\right)=0$, since 0 is the minimum of (norm is non negative) $g$. Secondly $f\left(X\right)$ achieves its global minimum at $X^*$ we conclude that $W$ is the globally optimal solution of $\rho$ for any $W\in\mathcal{C}_1$.
+
+\subsubsection{Proof that $w \in \mathcal{C}_2\Rightarrow \rho\left(w\right)$ is strict saddle:}
+
+To show that, it is sufficient to find a direction $\Delta$ along which the Hessian has a strictly negative curvature for each of these points. We construct $\Delta = W-W^*R$ the difference from $W$ to its nearest global factor $W^*$. Then we evaluate the Hessian bilinear form along the direction $\Delta$:
+\begin{align}\label{bilinear_form}
+\begin{split}
+    \left[\nabla^2\rho\left(W\right)\right]\left(\Delta,\Delta\right)= &
+    2\underbrace{\left\langle \nabla f\left(X\right),\Delta_{U}\Delta_{V}^{T}\right\rangle }_{\Pi_{1}}\\
+    & +\underbrace{\left[\nabla f\left(X\right)\right]\left(\Delta_{U}V^{T}+U\Delta_{V}^{T},\Delta_{U}V^{T}+U\Delta_{V}^{T}\right)}_{\Pi_{2}} \\
+    & + \mu\underbrace{\left\langle \hat{W}\hat{\Delta}^{T},\Delta W^{T}\right\rangle }_{\Pi_{3}}\\
+    & + \mu\underbrace{\left\langle \hat{W}\hat{W}^{T},\Delta\Delta^{T}\right\rangle }_{\Pi_{4}}
+\end{split}
+\end{align}
+
+By Lemma \ref{lemma_6} we get: 
+\begin{align*}
+    \Pi_1 \le & -\alpha\left\Vert X-X^*\right\Vert^2_F \\
+    \Pi_2 \le & \beta\left\Vert W\Delta^T\right\Vert^2_F \\
+    \Pi_3 \le & \left\Vert W\Delta^T\right\Vert^2_F \\
+    \Pi_4 \le & 2\left\Vert X-X^*\right\Vert^2_F \\
+\end{align*}
+
+Now, we have:
+\begin{align*} 
+    \left\Vert W\Delta^T\right\Vert^2_F = & \left\Vert W\left(W-W^*R\right)^T\right\Vert^2_F \\
+    \overset{\left(i\right)}{\le} & \frac{1}{8}\left\Vert WW^T-W^*{W^*}^T\right\Vert^2_F + \left(3 + \frac{1}{2\left(\sqrt{2}- 1\right)}\right)\left\Vert \left(WW^T-W^*{W^*}^T\right)P_W\right\Vert^2_F\\
+    \overset{\left(ii\right)}{\le} & \frac{1}{8}\left\Vert WW^T-W^*{W^*}^T\right\Vert^2_F + \left(12 + \frac{2}{\left(\sqrt{2}- 1\right)}\right)\left(\frac{\alpha - \beta}{\alpha + \beta}\right)^2\left\Vert X-X^*\right\Vert_F^2\\
+    \overset{\left(iii\right)}{\le} & \left(\frac{1}{2} + \left(12 + \frac{2}{\left(\sqrt{2}- 1\right)}\right)\left(\frac{\alpha - \beta}{\alpha + \beta}\right)^2\right)\left\Vert X-X^*\right\Vert_F^2
+\end{align*}
+
+$\left(i\right)$ by lemma \ref{lemma_4}, $\left(ii\right)$ by lemma \ref{lemma_2}, $\left(iii\right)$ by lemma \ref{lemma_5}. \\
+
+And after substituting into \ref{bilinear_form} we get:
+\begin{align*}
+    \left[\nabla^2\rho\left(W\right)\right]\left(\Delta,\Delta\right)= & 2\Pi_1 + \Pi_2 + \mu\Pi_3 + \mu\Pi_4 \\
+    \le & -2\alpha\left\Vert X-X^*\right\Vert^2_F + \left(\beta+\mu\right)\left\Vert W\Delta^T\right\Vert^2_F + 2\mu\left\Vert X-X^*\right\Vert^2_F \\
+    \le & 2\left(\mu-\alpha\right)\left\Vert X-X^*\right\Vert^2_F + \left(\beta+\mu\right)\left\Vert W\Delta^T\right\Vert^2_F \\
+    \le & 2\left(\mu-\alpha\right)\left\Vert X-X^*\right\Vert^2_F + \left(\beta+\mu\right)\left(\frac{1}{2} + \left(12 + \frac{2}{\left(\sqrt{2}- 1\right)}\right)\left(\frac{\alpha - \beta}{\alpha + \beta}\right)^2\right)\left\Vert X-X^*\right\Vert_F^2 \\
+    \overset{\left(iv\right)}{\le} & -0.2\alpha\left\Vert X-X^*\right\Vert_F^2 \\
+    \overset{\left(v\right)}{\le} & -0.05\alpha\left\Vert WW^T-W^*{W^*}^T\right\Vert^2_F \\
+    \overset{\left(vi\right)}{\le} & -0.05\alpha\left\Vert\Delta\right\Vert\begin{cases}
+2\left(\sqrt{2}-1\right)\sigma^2_r\left(W^{*}\right) & when\;r=r^{*}\\
+\min\left\{ \sigma^2_{r^c}\left(W\right),\sigma^2_{r^*}\left(W^{*}\right)\right\}  & when\;r > r^{*}\\
+\sigma^2_{r^*}\left(W^{*}\right) & when\;r_c=0
+\end{cases}
+\end{align*}
+
+$\left(iv\right)$ since $\frac{\beta}{\alpha}\le1.5$ and $\mu\le \frac{1}{16}\alpha$, $\left(v\right)$ by Lemma \ref{lemma_5}, and $\left(vi\right)$ by Lemma \ref{lemma_3}.
+
+Finally we complete the proof of the main theorem by noting that for every $\ell$ we have: $\sigma^2_{\ell}\left(W^{*}\right) = 2\sigma_{\ell}\left(X^{*}\right)$, since the SVD decompositions of $W^*$ and $X^*$ are:
+\begin{align*}
+    W^*=\left[\begin{array}{c}
+Q_{U^{*}}\Sigma^{*1/2}\\
+Q_{V^{*}}\Sigma^{*1/2}
+\end{array}\right]=\left[\begin{array}{c}
+Q_{U^{*}}/\sqrt{2}\\
+Q_{V^{*}}/\sqrt{2}
+\end{array}\right]\left(\sqrt{2}\Sigma^{*1/2}\right)\boldsymbol{I}
+\end{align*}
+And:
+\begin{align*}
+    X^*=Q_{U^{*}}\Sigma^{*}Q_{V^{*}}^T.
+\end{align*}
+
+\end{document}
